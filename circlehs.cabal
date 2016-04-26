@@ -31,7 +31,6 @@ library
                         -- API
                         , CircleCI.User
                         , CircleCI.Project
-                        , CircleCI.Build.Info
                         , CircleCI.CheckoutKey
                         , CircleCI.Environment
                         , CircleCI.Cache

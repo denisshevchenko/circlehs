@@ -50,7 +50,7 @@ import           Servant.Client
 -- | Name of environment variable for project's build.
 type EnvVarName = Text
 
--- | Shows list of environment variables. Based on https://circleci.com/docs/api/#list-environment-variables.
+-- | Shows list of environment variables for single project. Based on https://circleci.com/docs/api/#list-environment-variables.
 --
 -- Usage example:
 --
@@ -67,7 +67,7 @@ type EnvVarName = Text
 --         Left problem  -> print problem
 --         Right envVars -> print envVars
 -- @
-getEnvVars :: ProjectPoint    -- ^ Names of GitHub user/project.
+getEnvVars :: ProjectPoint              -- ^ Names of GitHub user/project.
            -> CircleCIResponse [EnvVar] -- ^ List of environment variables.
 getEnvVars project = do
     AccountAPIToken token <- ask
@@ -80,6 +80,24 @@ getEnvVars project = do
                           apiBaseUrl
 
 -- | Shows single environment variable. Based on https://circleci.com/docs/api/#get-environment-variable.
+--
+-- Usage example:
+--
+-- @
+-- {-\# LANGUAGE OverloadedStrings \#-}
+-- {-\# LANGUAGE LambdaCase \#-}
+--
+-- import CircleCI
+--
+-- main :: IO ()
+-- main = runCircleCI (getEnvVar project "GCC") token
+--     >>= \\case
+--         Left problem  -> print problem
+--         Right envVars -> print envVars
+--   where
+--     project = ProjectPoint "denisshevchenko" "circlehs"
+--     token   = AccountAPIToken "e64c674195b87d76e988e9fbcba2whatever"
+-- @
 getEnvVar :: ProjectPoint    -- ^ Names of GitHub user/project.
           -> EnvVarName      -- ^ Environment variable name.
           -> CircleCIResponse EnvVar -- ^ Environment variable.
@@ -95,6 +113,25 @@ getEnvVar project envVarName = do
                          apiBaseUrl
 
 -- | Adds environment variable. Based on https://circleci.com/docs/api/#add-environment-variable.
+--
+-- -- Usage example:
+--
+-- @
+-- {-\# LANGUAGE OverloadedStrings \#-}
+-- {-\# LANGUAGE LambdaCase \#-}
+--
+-- import CircleCI
+--
+-- main :: IO ()
+-- main = runCircleCI (addEnvVar project envVar) token
+--     >>= \\case
+--         Left problem  -> print problem
+--         Right envVars -> print envVars
+--   where
+--     project = ProjectPoint "denisshevchenko" "circlehs"
+--     envVar  = EnvVar "GCC" "/usr/local/bin/gcc-4.8"
+--     token   = AccountAPIToken "e64c674195b87d76e988e9fbcba2whatever"
+-- @
 addEnvVar :: ProjectPoint    -- ^ Names of GitHub user/project.
           -> EnvVar          -- ^ Environment variable.
           -> CircleCIResponse EnvVar -- ^ Added environment variable.
@@ -110,6 +147,24 @@ addEnvVar project envVar = do
                          apiBaseUrl
 
 -- | Deletes single environment variable. Based on https://circleci.com/docs/api/#delete-environment-variable.
+--
+-- Usage example:
+--
+-- @
+-- {-\# LANGUAGE OverloadedStrings \#-}
+-- {-\# LANGUAGE LambdaCase \#-}
+--
+-- import CircleCI
+--
+-- main :: IO ()
+-- main = runCircleCI (deleteEnvVar project "GCC") token
+--     >>= \\case
+--         Left problem  -> print problem
+--         Right envVars -> print envVars
+--   where
+--     project = ProjectPoint "denisshevchenko" "circlehs"
+--     token   = AccountAPIToken "e64c674195b87d76e988e9fbcba2whatever"
+-- @
 deleteEnvVar :: ProjectPoint    -- ^ Names of GitHub user/project.
              -> EnvVarName      -- ^ Environment variable name.
              -> CircleCIResponse EnvVarDeleted -- ^ Info about environment variable deleting.
@@ -130,7 +185,7 @@ data EnvVar = EnvVar {
     , value :: Text
     } deriving (Eq, Show)
 
--- How to make EnvVar from JSON.
+-- How to make EnvVar from JSON, for POST call.
 instance FromJSON EnvVar where
     parseJSON (Object o) = EnvVar
         <$> o .: "name"
@@ -154,7 +209,6 @@ instance FromJSON EnvVarDeleted where
     parseJSON (Object o) =
         o .: "message" >>= toEnvVarDeleted
     parseJSON _ = mzero
-
 
 toEnvVarDeleted :: Text -> Parser EnvVarDeleted
 toEnvVarDeleted rawMessage = return $

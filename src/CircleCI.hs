@@ -13,8 +13,6 @@ module CircleCI (
       module CircleCI.User
     -- * Work with Projects info
     , module CircleCI.Project
-    -- * Work with projects' builds
-    , module CircleCI.Build.Info
     -- * Work with GitHub Checkout Keys
     , module CircleCI.CheckoutKey
     -- * Work with Environment Variables for project build
@@ -30,7 +28,6 @@ module CircleCI (
 
 import CircleCI.User
 import CircleCI.Project
-import CircleCI.Build.Info
 import CircleCI.CheckoutKey
 import CircleCI.Environment
 import CircleCI.Cache

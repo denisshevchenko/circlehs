@@ -149,6 +149,7 @@ data RawBranchBuildInfo = RawBranchBuildInfo {
     , rawRunningBuilds     :: Maybe [BuildInfo]
     } deriving (Eq, Show)
 
+-- How we create RawBranchBuildInfo from raw JSON.
 instance FromJSON RawBranchBuildInfo where
     parseJSON (Object o) = RawBranchBuildInfo
         <$> o .:? "last_success"
@@ -177,6 +178,7 @@ data BuildInfo = BuildInfo {
     , addingDate    :: UTCTime
     } deriving (Eq, Show)
 
+-- How we create BuildInfo from raw JSON.
 instance FromJSON BuildInfo where
     parseJSON (Object o) = BuildInfo
         <$> (o .: "status" >>= toBuildStatus)
