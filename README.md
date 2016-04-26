@@ -14,7 +14,7 @@ Let's obtain information about the user:
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE LambdaCase #-}
 
-import CircleHs
+import CircleCI
 
 main :: IO ()
 main = runCircleCI getUserInfo
