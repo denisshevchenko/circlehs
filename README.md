@@ -24,27 +24,3 @@ main = runCircleCI getUserInfo
         Right info   -> print info
 ```
 
-## Install
-
-Add `circlehs` into `build-depends`-section in your `.cabal`-file. Then choose your way.
-
-### With stack
-
-From GitHub - add this in your `stack.yaml`:
-
-```yaml
-- location:
-    git: https://github.com/denisshevchenko/circlehs.git
-    commit: 0ef96c83b8c237dc3b19c744642bc6whatever
-```
-
-Then:
-
-```bash
-$ stack build
-```
-
-### With cabal
-
-Soon. By the way, `stack`-way is much better... ;-)
-
