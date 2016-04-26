@@ -27,19 +27,19 @@ tested-with:         GHC == 7.10.2, GHC == 7.10.3
 library
   hs-source-dirs:       src
 
-  exposed-modules:        CircleCI
+  exposed-modules:        Network.CircleCI
                         -- API
-                        , CircleCI.User
-                        , CircleCI.Project
-                        , CircleCI.CheckoutKey
-                        , CircleCI.Environment
-                        , CircleCI.Cache
+                        , Network.CircleCI.User
+                        , Network.CircleCI.Project
+                        , Network.CircleCI.CheckoutKey
+                        , Network.CircleCI.Environment
+                        , Network.CircleCI.Cache
                         -- Commonly used stuff.
-                        , CircleCI.Common.Types
-                        , CircleCI.Common.Run
+                        , Network.CircleCI.Common.Types
+                        , Network.CircleCI.Common.Run
 
-  other-modules:          CircleCI.Common.HTTPS
-                        , CircleCI.Common.URL
+  other-modules:          Network.CircleCI.Common.HTTPS
+                        , Network.CircleCI.Common.URL
 
   build-depends:          base                  >= 4.7      && < 5
                         , text                  >= 1.2.2.1  && < 2

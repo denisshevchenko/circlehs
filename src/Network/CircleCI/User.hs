@@ -1,5 +1,5 @@
 {-|
-Module      : CircleCI.User
+Module      : Network.CircleCI.User
 Copyright   : (c) Denis Shevchenko, 2016
 License     : MIT
 Maintainer  : me@dshevchenko.biz
@@ -13,7 +13,7 @@ API calls for work with User info.
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE MultiWayIf #-}
 
-module CircleCI.User (
+module Network.CircleCI.User (
     -- * API call
       getUserInfo
     -- * Types for calls and response
@@ -23,14 +23,14 @@ module CircleCI.User (
     , Plan (..)
     , GitHubOAuth (..)
     , AnalyticsId
-    , module CircleCI.Common.Types
-    , module CircleCI.Common.Run
+    , module Network.CircleCI.Common.Types
+    , module Network.CircleCI.Common.Run
 ) where
 
-import           CircleCI.Common.URL
-import           CircleCI.Common.Types
-import           CircleCI.Common.HTTPS
-import           CircleCI.Common.Run
+import           Network.CircleCI.Common.URL
+import           Network.CircleCI.Common.Types
+import           Network.CircleCI.Common.HTTPS
+import           Network.CircleCI.Common.Run
 
 import           Control.Monad                  ( mzero )
 import           Control.Monad.Except           ( runExceptT )
@@ -55,7 +55,7 @@ import           Servant.Client
 -- {-\# LANGUAGE OverloadedStrings \#-}
 -- {-\# LANGUAGE LambdaCase \#-}
 --
--- import CircleCI
+-- import Network.CircleCI
 --
 -- main :: IO ()
 -- main = runCircleCI getUserInfo

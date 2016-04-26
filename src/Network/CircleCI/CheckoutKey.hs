@@ -1,5 +1,5 @@
 {-|
-Module      : CircleCI.CheckoutKey
+Module      : Network.CircleCI.CheckoutKey
 Copyright   : (c) Denis Shevchenko, 2016
 License     : MIT
 Maintainer  : me@dshevchenko.biz
@@ -15,7 +15,7 @@ For more info please see "Checkout SSH keys" section in your CircleCI project's 
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE MultiWayIf #-}
 
-module CircleCI.CheckoutKey (
+module Network.CircleCI.CheckoutKey (
     -- * API calls
       getCheckoutKeys
     , getCheckoutKey
@@ -26,14 +26,14 @@ module CircleCI.CheckoutKey (
     , CheckoutKeyInfo (..)
     , CheckoutKeyType (..)
     , CheckoutKeyDeleted (..)
-    , module CircleCI.Common.Types
-    , module CircleCI.Common.Run
+    , module Network.CircleCI.Common.Types
+    , module Network.CircleCI.Common.Run
 ) where
 
-import           CircleCI.Common.URL
-import           CircleCI.Common.Types
-import           CircleCI.Common.HTTPS
-import           CircleCI.Common.Run
+import           Network.CircleCI.Common.URL
+import           Network.CircleCI.Common.Types
+import           Network.CircleCI.Common.HTTPS
+import           Network.CircleCI.Common.Run
 
 import           Control.Monad                  ( mzero )
 import           Control.Monad.Except           ( runExceptT )
@@ -57,7 +57,7 @@ import           Servant.Client
 -- {-\# LANGUAGE OverloadedStrings \#-}
 -- {-\# LANGUAGE LambdaCase \#-}
 --
--- import CircleCI
+-- import Network.CircleCI
 --
 -- main :: IO ()
 -- main = runCircleCI (getCheckoutKeys $ ProjectPoint "denisshevchenko" "circlehs")

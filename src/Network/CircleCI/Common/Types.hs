@@ -1,5 +1,5 @@
 {-|
-Module      : CircleCI.Common.Types
+Module      : Network.CircleCI.Common.Types
 Copyright   : (c) Denis Shevchenko, 2016
 License     : MIT
 Maintainer  : me@dshevchenko.biz
@@ -8,7 +8,7 @@ Stability   : alpha
 Common types for work with CircleCI API.
 -}
 
-module CircleCI.Common.Types (
+module Network.CircleCI.Common.Types (
       AccountAPIToken (..)
     , Token
     , UserName

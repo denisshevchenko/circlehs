@@ -1,5 +1,5 @@
 {-|
-Module      : CircleCI.Environment
+Module      : Network.CircleCI.Environment
 Copyright   : (c) Denis Shevchenko, 2016
 License     : MIT
 Maintainer  : me@dshevchenko.biz
@@ -15,7 +15,7 @@ For more info please see "Environment variables" section in your CircleCI projec
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE MultiWayIf #-}
 
-module CircleCI.Environment (
+module Network.CircleCI.Environment (
     -- * API calls
       getEnvVars
     , getEnvVar
@@ -25,14 +25,14 @@ module CircleCI.Environment (
     , EnvVar (..)
     , EnvVarDeleted (..)
     , EnvVarName
-    , module CircleCI.Common.Types
-    , module CircleCI.Common.Run
+    , module Network.CircleCI.Common.Types
+    , module Network.CircleCI.Common.Run
 ) where
 
-import           CircleCI.Common.URL
-import           CircleCI.Common.Types
-import           CircleCI.Common.HTTPS
-import           CircleCI.Common.Run
+import           Network.CircleCI.Common.URL
+import           Network.CircleCI.Common.Types
+import           Network.CircleCI.Common.HTTPS
+import           Network.CircleCI.Common.Run
 
 import           Control.Monad                  ( mzero )
 import           Control.Monad.Except           ( runExceptT )
@@ -58,7 +58,7 @@ type EnvVarName = Text
 -- {-\# LANGUAGE OverloadedStrings \#-}
 -- {-\# LANGUAGE LambdaCase \#-}
 --
--- import CircleCI
+-- import Network.CircleCI
 --
 -- main :: IO ()
 -- main = runCircleCI (getEnvVars $ ProjectPoint "denisshevchenko" "circlehs")
@@ -87,7 +87,7 @@ getEnvVars project = do
 -- {-\# LANGUAGE OverloadedStrings \#-}
 -- {-\# LANGUAGE LambdaCase \#-}
 --
--- import CircleCI
+-- import Network.CircleCI
 --
 -- main :: IO ()
 -- main = runCircleCI (getEnvVar project "GCC") token
@@ -120,7 +120,7 @@ getEnvVar project envVarName = do
 -- {-\# LANGUAGE OverloadedStrings \#-}
 -- {-\# LANGUAGE LambdaCase \#-}
 --
--- import CircleCI
+-- import Network.CircleCI
 --
 -- main :: IO ()
 -- main = runCircleCI (addEnvVar project envVar) token
@@ -154,7 +154,7 @@ addEnvVar project envVar = do
 -- {-\# LANGUAGE OverloadedStrings \#-}
 -- {-\# LANGUAGE LambdaCase \#-}
 --
--- import CircleCI
+-- import Network.CircleCI
 --
 -- main :: IO ()
 -- main = runCircleCI (deleteEnvVar project "GCC") token

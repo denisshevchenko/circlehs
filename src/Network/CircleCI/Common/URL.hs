@@ -1,5 +1,5 @@
 {-|
-Module      : CircleCI.Common.URL
+Module      : Network.CircleCI.Common.URL
 Copyright   : (c) Denis Shevchenko, 2016
 License     : MIT
 Maintainer  : me@dshevchenko.biz
@@ -8,7 +8,7 @@ Stability   : alpha
 Base URL for all CircleCI API calls. Based on https://circleci.com/docs/api/#calling.
 -}
 
-module CircleCI.Common.URL (
+module Network.CircleCI.Common.URL (
     apiBaseUrl
 ) where
 

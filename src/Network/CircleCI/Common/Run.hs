@@ -1,5 +1,5 @@
 {-|
-Module      : CircleCI.Common.Run
+Module      : Network.CircleCI.Common.Run
 Copyright   : (c) Denis Shevchenko, 2016
 License     : MIT
 Maintainer  : me@dshevchenko.biz
@@ -8,7 +8,7 @@ Stability   : alpha
 Run 'CircleCIResponse' monad.
 -}
 
-module CircleCI.Common.Run (
+module Network.CircleCI.Common.Run (
     runCircleCI
 ) where
 

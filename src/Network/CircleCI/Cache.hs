@@ -1,5 +1,5 @@
 {-|
-Module      : CircleCI.Cache
+Module      : Network.CircleCI.Cache
 Copyright   : (c) Denis Shevchenko, 2016
 License     : MIT
 Maintainer  : me@dshevchenko.biz
@@ -13,19 +13,19 @@ API call for work with project build's cache.
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE MultiWayIf #-}
 
-module CircleCI.Cache (
+module Network.CircleCI.Cache (
     -- * API call
       clearCache
     -- * Type for response
     , CacheCleared (..)
-    , module CircleCI.Common.Types
-    , module CircleCI.Common.Run
+    , module Network.CircleCI.Common.Types
+    , module Network.CircleCI.Common.Run
 ) where
 
-import           CircleCI.Common.URL
-import           CircleCI.Common.Types
-import           CircleCI.Common.HTTPS
-import           CircleCI.Common.Run
+import           Network.CircleCI.Common.URL
+import           Network.CircleCI.Common.Types
+import           Network.CircleCI.Common.HTTPS
+import           Network.CircleCI.Common.Run
 
 import           Control.Monad                  ( mzero )
 import           Control.Monad.Except           ( runExceptT )
@@ -48,7 +48,7 @@ import           Servant.Client
 -- {-\# LANGUAGE OverloadedStrings \#-}
 -- {-\# LANGUAGE LambdaCase \#-}
 --
--- import CircleCI
+-- import Network.CircleCI
 --
 -- main :: IO ()
 -- main = runCircleCI (clearCache $ ProjectPoint "denisshevchenko" "circlehs")
