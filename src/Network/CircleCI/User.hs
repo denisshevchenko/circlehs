@@ -148,8 +148,8 @@ instance FromJSON RawProject where
     parseJSON _ = mzero
 
 -- | CircleCI plan. For more info please see https://circleci.com/pricing/.
-data Plan = Hobbyist
-            | Plan Text
+data Plan = Hobbyist    -- ^ Hobbyist is a free plan for Linux.
+            | Plan Text -- ^ Commercial plan.
             deriving (Show)
 
 toPlan :: Text -> Parser Plan

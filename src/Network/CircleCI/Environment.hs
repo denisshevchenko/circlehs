@@ -47,10 +47,10 @@ import           Network.HTTP.Client            ( Manager )
 import           Servant.API
 import           Servant.Client
 
--- | Name of environment variable for project's build.
+-- | Name of environment variable.
 type EnvVarName = Text
 
--- | Shows list of environment variables for single project. Based on https://circleci.com/docs/api/#list-environment-variables.
+-- | Shows list of environment variables for the single project. Based on https://circleci.com/docs/api/#list-environment-variables.
 --
 -- Usage example:
 --
@@ -90,16 +90,16 @@ getEnvVars project = do
 -- import Network.CircleCI
 --
 -- main :: IO ()
--- main = runCircleCI (getEnvVar project "GCC") token
+-- main = runCircleCI (getEnvVar project \"GCC\") token
 --     >>= \\case
---         Left problem  -> print problem
---         Right envVars -> print envVars
+--         Left problem -> print problem
+--         Right envVar -> print envVar
 --   where
 --     project = ProjectPoint "denisshevchenko" "circlehs"
 --     token   = AccountAPIToken "e64c674195b87d76e988e9fbcba2whatever"
 -- @
-getEnvVar :: ProjectPoint    -- ^ Names of GitHub user/project.
-          -> EnvVarName      -- ^ Environment variable name.
+getEnvVar :: ProjectPoint            -- ^ Names of GitHub user/project.
+          -> EnvVarName              -- ^ Environment variable name.
           -> CircleCIResponse EnvVar -- ^ Environment variable.
 getEnvVar project envVarName = do
     AccountAPIToken token <- ask
@@ -114,7 +114,7 @@ getEnvVar project envVarName = do
 
 -- | Adds environment variable. Based on https://circleci.com/docs/api/#add-environment-variable.
 --
--- -- Usage example:
+-- Usage example:
 --
 -- @
 -- {-\# LANGUAGE OverloadedStrings \#-}
@@ -125,15 +125,15 @@ getEnvVar project envVarName = do
 -- main :: IO ()
 -- main = runCircleCI (addEnvVar project envVar) token
 --     >>= \\case
---         Left problem  -> print problem
---         Right envVars -> print envVars
+--         Left problem    -> print problem
+--         Right newEnvVar -> print newEnvVar
 --   where
 --     project = ProjectPoint "denisshevchenko" "circlehs"
---     envVar  = EnvVar "GCC" "/usr/local/bin/gcc-4.8"
+--     envVar  = EnvVar \"GCC\" "\/usr\/local\/bin\/gcc-4.8"
 --     token   = AccountAPIToken "e64c674195b87d76e988e9fbcba2whatever"
 -- @
-addEnvVar :: ProjectPoint    -- ^ Names of GitHub user/project.
-          -> EnvVar          -- ^ Environment variable.
+addEnvVar :: ProjectPoint            -- ^ Names of GitHub user/project.
+          -> EnvVar                  -- ^ Environment variable.
           -> CircleCIResponse EnvVar -- ^ Added environment variable.
 addEnvVar project envVar = do
     AccountAPIToken token <- ask
@@ -157,16 +157,16 @@ addEnvVar project envVar = do
 -- import Network.CircleCI
 --
 -- main :: IO ()
--- main = runCircleCI (deleteEnvVar project "GCC") token
+-- main = runCircleCI (deleteEnvVar project \"GCC\") token
 --     >>= \\case
---         Left problem  -> print problem
---         Right envVars -> print envVars
+--         Left problem    -> print problem
+--         Right isDeleted -> print isDeleted
 --   where
 --     project = ProjectPoint "denisshevchenko" "circlehs"
 --     token   = AccountAPIToken "e64c674195b87d76e988e9fbcba2whatever"
 -- @
-deleteEnvVar :: ProjectPoint    -- ^ Names of GitHub user/project.
-             -> EnvVarName      -- ^ Environment variable name.
+deleteEnvVar :: ProjectPoint                   -- ^ Names of GitHub user/project.
+             -> EnvVarName                     -- ^ Environment variable name.
              -> CircleCIResponse EnvVarDeleted -- ^ Info about environment variable deleting.
 deleteEnvVar project envVarName = do
     AccountAPIToken token <- ask

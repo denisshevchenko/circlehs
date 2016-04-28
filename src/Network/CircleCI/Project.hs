@@ -73,7 +73,7 @@ getProjectsInfo = do
 
 -- | Info about single project.
 data ProjectInfo = ProjectInfo {
-      language                  :: Text                 -- ^ Programming language using in this project.
+      language                  :: Text                 -- ^ Programming language using in project.
     , repositoryName            :: Text                 -- ^
     , repositoryUrl             :: Text                 -- ^ Repository URL.
     , branches                  :: [BranchBuildInfo]    -- ^ Info about recent builds in branches.
@@ -149,7 +149,7 @@ data RawBranchBuildInfo = RawBranchBuildInfo {
     , rawRunningBuilds     :: Maybe [BuildInfo]
     } deriving (Eq, Show)
 
--- How we create RawBranchBuildInfo from raw JSON.
+-- How we create RawBranchBuildInfo from JSON.
 instance FromJSON RawBranchBuildInfo where
     parseJSON (Object o) = RawBranchBuildInfo
         <$> o .:? "last_success"
@@ -171,14 +171,14 @@ data BranchBuildInfo = BranchBuildInfo {
 
 -- | Info about single build.
 data BuildInfo = BuildInfo {
-      status        :: BuildStatus
-    , number        :: Int
-    , commit        :: Text
-    , pushDate      :: UTCTime
-    , addingDate    :: UTCTime
+      status      :: BuildStatus
+    , number      :: Int
+    , commit      :: Text
+    , pushDate    :: UTCTime
+    , addingDate  :: UTCTime
     } deriving (Eq, Show)
 
--- How we create BuildInfo from raw JSON.
+-- How we create BuildInfo from JSON.
 instance FromJSON BuildInfo where
     parseJSON (Object o) = BuildInfo
         <$> (o .: "status" >>= toBuildStatus)

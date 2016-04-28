@@ -57,7 +57,7 @@ import           Servant.Client
 --         Left problem    -> print problem
 --         Right isCleared -> print isCleared
 -- @
-clearCache :: ProjectPoint    -- ^ Names of GitHub user/project.
+clearCache :: ProjectPoint                  -- ^ Names of GitHub user/project.
            -> CircleCIResponse CacheCleared -- ^ Info about clearing.
 clearCache project = do
     AccountAPIToken token <- ask

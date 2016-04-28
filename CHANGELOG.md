@@ -1,5 +1,4 @@
-0.0.2
+0.0.3
 ------
-* `Network`-based modules hierarchy.
-* Documentation improvements, more usage examples.
+* The first version for Hackage's main index.
 

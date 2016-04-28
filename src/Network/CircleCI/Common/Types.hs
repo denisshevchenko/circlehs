@@ -21,9 +21,9 @@ module Network.CircleCI.Common.Types (
     , ErrorMessage
 ) where
 
-import Servant.Client
-import Data.Text                ( Text )
-import Control.Monad.Reader
+import           Servant.Client
+import           Data.Text                ( Text )
+import           Control.Monad.Reader
 
 -- import CircleCI.Common.Run
 
@@ -43,12 +43,13 @@ type ProjectName = Text
 type BranchName = Text
 
 -- | Number of project's build on CircleCI.
-newtype BuildNumber = BuildNumber Int deriving (Eq, Show)
+newtype BuildNumber = BuildNumber Int
+                    deriving (Eq, Show)
 
 -- | User email address.
 type Email = Text
 
--- | Response from CircleCI.
+-- | Monad for response from CircleCI.
 type CircleCIResponse a = ReaderT AccountAPIToken IO (Either ServantError a)
 
 -- | GitHub project identifier, composed from user name and project name.

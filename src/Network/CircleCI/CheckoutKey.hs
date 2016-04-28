@@ -63,10 +63,10 @@ import           Servant.Client
 -- main = runCircleCI (getCheckoutKeys $ ProjectPoint "denisshevchenko" "circlehs")
 --                    (AccountAPIToken "e64c674195bbc0d0be3ef9679b6c6ba2whatever")
 --     >>= \\case
---         Left problem   -> print problem
---         Right keysList -> print keysList
+--         Left problem -> print problem
+--         Right keys   -> print keys
 -- @
-getCheckoutKeys :: ProjectPoint    -- ^ Names of GitHub user/project.
+getCheckoutKeys :: ProjectPoint                       -- ^ Names of GitHub user/project.
                 -> CircleCIResponse [CheckoutKeyInfo] -- ^ List of checkout keys.
 getCheckoutKeys project = do
     AccountAPIToken token <- ask
@@ -79,8 +79,27 @@ getCheckoutKeys project = do
                                apiBaseUrl
 
 -- | Shows single checkout key. Based on https://circleci.com/docs/api/#get-checkout-key.
-getCheckoutKey :: ProjectPoint     -- ^ Names of GitHub user/project.
-               -> Fingerprint      -- ^ Key fingerprint.
+--
+-- Usage example:
+--
+-- @
+-- {-\# LANGUAGE OverloadedStrings \#-}
+-- {-\# LANGUAGE LambdaCase \#-}
+--
+-- import Network.CircleCI
+--
+-- main :: IO ()
+-- main = runCircleCI (getCheckoutKey project fingerprint) apiToken
+--     >>= \\case
+--         Left problem -> print problem
+--         Right key    -> print key
+--   where
+--     project     = ProjectPoint "denisshevchenko" "circlehs"
+--     fingerprint = Fingerprint "79:23:05:6a:6d:4c:3c:5c:0e:64:79:49:f0:e9:8d:a0"
+--     apiToken    = AccountAPIToken "e64c674195bbc0d0be3ef9679b6c6ba2whatever"
+-- @
+getCheckoutKey :: ProjectPoint                      -- ^ Names of GitHub user/project.
+               -> Fingerprint                       -- ^ Key fingerprint.
                -> CircleCIResponse CheckoutKeyInfo  -- ^ Checkout key info.
 getCheckoutKey project (Fingerprint aFingerprint) = do
     AccountAPIToken token <- ask
@@ -94,7 +113,23 @@ getCheckoutKey project (Fingerprint aFingerprint) = do
                               apiBaseUrl
 
 -- | Creates checkout key. Based on https://circleci.com/docs/api/#new-checkout-key.
-createCheckoutKey :: ProjectPoint    -- ^ Names of GitHub user/project.
+--
+-- Usage example:
+--
+-- @
+-- {-\# LANGUAGE OverloadedStrings \#-}
+-- {-\# LANGUAGE LambdaCase \#-}
+--
+-- import Network.CircleCI
+--
+-- main :: IO ()
+-- main = runCircleCI (createCheckoutKey $ ProjectPoint "denisshevchenko" "circlehs")
+--                    (AccountAPIToken "e64c674195bbc0d0be3ef9679b6c6ba2whatever")
+--     >>= \\case
+--         Left problem -> print problem
+--         Right newKey -> print newKey
+-- @
+createCheckoutKey :: ProjectPoint                     -- ^ Names of GitHub user/project.
                   -> CircleCIResponse CheckoutKeyInfo -- ^ New checkout key info.
 createCheckoutKey project = do
     AccountAPIToken token <- ask
@@ -107,8 +142,27 @@ createCheckoutKey project = do
                                  apiBaseUrl
 
 -- | Deletes single checkout key. Based on https://circleci.com/docs/api/#delete-checkout-key.
-deleteCheckoutKey :: ProjectPoint    -- ^ Names of GitHub user/project.
-                  -> Fingerprint     -- ^ Key fingerprint.
+--
+-- Usage example:
+--
+-- @
+-- {-\# LANGUAGE OverloadedStrings \#-}
+-- {-\# LANGUAGE LambdaCase \#-}
+--
+-- import Network.CircleCI
+--
+-- main :: IO ()
+-- main = runCircleCI (deleteCheckoutKey project fingerprint) apiToken
+--     >>= \\case
+--         Left problem    -> print problem
+--         Right isDeleted -> print isDeleted
+--   where
+--     project     = ProjectPoint "denisshevchenko" "circlehs"
+--     fingerprint = Fingerprint "79:23:05:6a:6d:4c:3c:5c:0e:64:79:49:f0:e9:8d:a0"
+--     apiToken    = AccountAPIToken "e64c674195bbc0d0be3ef9679b6c6ba2whatever"
+-- @
+deleteCheckoutKey :: ProjectPoint                         -- ^ Names of GitHub user/project.
+                  -> Fingerprint                          -- ^ Key fingerprint.
                   -> CircleCIResponse CheckoutKeyDeleted  -- ^ Status of checkout key deletion.
 deleteCheckoutKey project (Fingerprint aFingerprint) = do
     AccountAPIToken token <- ask
@@ -121,8 +175,9 @@ deleteCheckoutKey project (Fingerprint aFingerprint) = do
                                  manager
                                  apiBaseUrl
 
--- | Key fingerprint. For example, @"79:23:05:6a:6d:4c:cc:5c:0e:64:79:49:f0:e9:8d:a0"@.
-newtype Fingerprint = Fingerprint Text deriving (Eq, Show)
+-- | Checkout key fingerprint. For example, @"79:23:05:6a:6d:4c:3c:5c:0e:64:79:49:f0:e9:8d:a0"@.
+newtype Fingerprint = Fingerprint Text
+                    deriving (Eq, Show)
 
 -- | Type of checkout key.
 data CheckoutKeyType = GitHubDeployKey  -- ^ Repo-specific SSH key.
@@ -142,7 +197,7 @@ data CheckoutKeyInfo = CheckoutKeyInfo {
 instance FromJSON CheckoutKeyInfo where
     parseJSON (Object o) = CheckoutKeyInfo
         <$>  o .: "public_key"
-        <*> (o .: "type" >>= toCheckoutKeyType)
+        <*> (o .: "type"        >>= toCheckoutKeyType)
         <*> (o .: "fingerprint" >>= toFingerprint)
         <*>  o .: "preferred"
         <*>  o .: "time"
