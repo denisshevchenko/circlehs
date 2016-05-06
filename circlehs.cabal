@@ -66,3 +66,17 @@ library
 source-repository head
   type:     git
   location: https://github.com/denisshevchenko/circlehs.git
+
+Test-Suite test-circlehs
+  -- Executable that indicate test failure
+  -- with a non-zero exit code when run.
+  type:                 exitcode-stdio-1.0
+
+  hs-source-dirs:       test
+  main-is:              Main.hs
+
+  build-depends:          base                  >= 4.7      && < 5
+                        , circlehs              >= 0.0.3    && < 0.1
+
+  default-language:     Haskell2010
+  ghc-options:          -Wall -fno-warn-unused-binds
