@@ -12,7 +12,7 @@ module Network.CircleCI.Common.URL (
     apiBaseUrl
 ) where
 
-import           Servant.Common.BaseUrl
+import           Servant.Client
 
 -- | Base URL for all API calls. For API v1 it's @https://circleci.com/api/v1/@.
 apiBaseUrl :: BaseUrl

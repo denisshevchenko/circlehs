@@ -25,22 +25,18 @@ module Network.CircleCI.Project (
     , module Network.CircleCI.Common.Run
 ) where
 
-import           Network.CircleCI.Common.URL
+import           Network.CircleCI.Common.Lift
 import           Network.CircleCI.Common.Types
-import           Network.CircleCI.Common.HTTPS
 import           Network.CircleCI.Common.Run
 
 import           Control.Monad                  ( mzero )
-import           Control.Monad.Except           ( runExceptT )
 import           Control.Monad.Reader           ( ask )
-import           Control.Monad.IO.Class         ( liftIO )
 import           Data.Aeson
 import           Data.Aeson.Types
 import           Data.HashMap.Strict
 import qualified Data.Proxy                     as P
 import           Data.Text                      ( Text )
 import           Data.Time.Clock                ( UTCTime )
-import           Network.HTTP.Client            ( Manager )
 
 import           Servant.API
 import           Servant.Client
@@ -65,11 +61,7 @@ import           Servant.Client
 getProjectsInfo :: CircleCIResponse [ProjectInfo] -- ^ Info about projects.
 getProjectsInfo = do
     AccountAPIToken token <- ask
-    liftIO . runExceptT $ do
-        manager <- httpsManager
-        servantGetProjectsInfo (Just token)
-                               manager
-                               apiBaseUrl
+    liftClientM $ servantGetProjectsInfo (Just token)
 
 -- | Info about single project.
 data ProjectInfo = ProjectInfo {
@@ -223,8 +215,6 @@ type GetProjectsInfoCall =
 -------------------------------------------------------------------------------
 
 servantGetProjectsInfo :: Maybe Token
-                       -> Manager
-                       -> BaseUrl
                        -> ClientM [ProjectInfo]
 servantGetProjectsInfo = client projectsInfoAPI
 
