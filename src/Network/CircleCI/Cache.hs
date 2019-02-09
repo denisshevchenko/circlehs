@@ -22,20 +22,16 @@ module Network.CircleCI.Cache (
     , module Network.CircleCI.Common.Run
 ) where
 
-import           Network.CircleCI.Common.URL
+import           Network.CircleCI.Common.Lift
 import           Network.CircleCI.Common.Types
-import           Network.CircleCI.Common.HTTPS
 import           Network.CircleCI.Common.Run
 
 import           Control.Monad                  ( mzero )
-import           Control.Monad.Except           ( runExceptT )
 import           Control.Monad.Reader           ( ask )
-import           Control.Monad.IO.Class         ( liftIO )
 import           Data.Aeson
 import           Data.Aeson.Types
 import qualified Data.Proxy                     as P
 import           Data.Text                      ( Text )
-import           Network.HTTP.Client            ( Manager )
 
 import           Servant.API
 import           Servant.Client
@@ -61,13 +57,10 @@ clearCache :: ProjectPoint                  -- ^ Names of GitHub user/project.
            -> CircleCIResponse CacheCleared -- ^ Info about clearing.
 clearCache project = do
     AccountAPIToken token <- ask
-    liftIO . runExceptT $ do
-        manager <- httpsManager
-        servantClearCache (userName project)
-                          (projectName project)
-                          (Just token)
-                          manager
-                          apiBaseUrl
+    liftClientM $ servantClearCache
+        (userName project)
+        (projectName project)
+        (Just token)
 
 -- | Cache clearing status.
 data CacheCleared = CacheSuccessfullyCleared
@@ -113,8 +106,6 @@ type ClearCacheCall =
 servantClearCache :: UserName
                   -> ProjectName
                   -> Maybe Token
-                  -> Manager
-                  -> BaseUrl
                   -> ClientM CacheCleared
 servantClearCache = client cacheAPI
 

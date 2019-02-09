@@ -1,3 +1,5 @@
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+
 {-|
 Module      : Network.CircleCI.Common.Types
 Copyright   : (c) Denis Shevchenko, 2016
@@ -22,6 +24,8 @@ module Network.CircleCI.Common.Types (
 ) where
 
 import           Servant.Client
+import           Servant.API
+import           Data.Aeson
 import           Data.Text                ( Text )
 import           Control.Monad.Reader
 
@@ -44,7 +48,7 @@ type BranchName = Text
 
 -- | Number of project's build on CircleCI.
 newtype BuildNumber = BuildNumber Int
-                    deriving (Eq, Show)
+                    deriving (Eq, Show, ToHttpApiData, FromJSON, ToJSON)
 
 -- | User email address.
 type Email = Text

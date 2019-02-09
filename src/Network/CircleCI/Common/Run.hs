@@ -18,4 +18,3 @@ import           Control.Monad.Reader
 -- instead of passing it as an explicit argument.
 runCircleCI :: ReaderT t IO a -> t -> IO a
 runCircleCI = runReaderT
-

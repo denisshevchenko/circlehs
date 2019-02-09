@@ -30,21 +30,17 @@ module Network.CircleCI.CheckoutKey (
     , module Network.CircleCI.Common.Run
 ) where
 
-import           Network.CircleCI.Common.URL
 import           Network.CircleCI.Common.Types
-import           Network.CircleCI.Common.HTTPS
+import           Network.CircleCI.Common.Lift
 import           Network.CircleCI.Common.Run
 
 import           Control.Monad                  ( mzero )
-import           Control.Monad.Except           ( runExceptT )
 import           Control.Monad.Reader           ( ask )
-import           Control.Monad.IO.Class         ( liftIO )
 import           Data.Aeson
 import           Data.Aeson.Types
 import qualified Data.Proxy                     as P
 import           Data.Text                      ( Text )
 import           Data.Time.Clock                ( UTCTime )
-import           Network.HTTP.Client            ( Manager )
 
 import           Servant.API
 import           Servant.Client
@@ -70,13 +66,10 @@ getCheckoutKeys :: ProjectPoint                       -- ^ Names of GitHub user/
                 -> CircleCIResponse [CheckoutKeyInfo] -- ^ List of checkout keys.
 getCheckoutKeys project = do
     AccountAPIToken token <- ask
-    liftIO . runExceptT $ do
-        manager <- httpsManager
-        servantGetCheckoutKeys (userName project)
-                               (projectName project)
-                               (Just token)
-                               manager
-                               apiBaseUrl
+    liftClientM $ servantGetCheckoutKeys
+        (userName project)
+        (projectName project)
+        (Just token)
 
 -- | Shows single checkout key. Based on https://circleci.com/docs/api/#get-checkout-key.
 --
@@ -103,14 +96,11 @@ getCheckoutKey :: ProjectPoint                      -- ^ Names of GitHub user/pr
                -> CircleCIResponse CheckoutKeyInfo  -- ^ Checkout key info.
 getCheckoutKey project (Fingerprint aFingerprint) = do
     AccountAPIToken token <- ask
-    liftIO . runExceptT $ do
-        manager <- httpsManager
-        servantGetCheckoutKey (userName project)
-                              (projectName project)
-                              aFingerprint
-                              (Just token)
-                              manager
-                              apiBaseUrl
+    liftClientM $ servantGetCheckoutKey
+        (userName project)
+        (projectName project)
+        aFingerprint
+        (Just token)
 
 -- | Creates checkout key. Based on https://circleci.com/docs/api/#new-checkout-key.
 --
@@ -133,13 +123,10 @@ createCheckoutKey :: ProjectPoint                     -- ^ Names of GitHub user/
                   -> CircleCIResponse CheckoutKeyInfo -- ^ New checkout key info.
 createCheckoutKey project = do
     AccountAPIToken token <- ask
-    liftIO . runExceptT $ do
-        manager <- httpsManager
-        servantCreateCheckoutKey (userName project)
-                                 (projectName project)
-                                 (Just token)
-                                 manager
-                                 apiBaseUrl
+    liftClientM $ servantCreateCheckoutKey
+        (userName project)
+        (projectName project)
+        (Just token)
 
 -- | Deletes single checkout key. Based on https://circleci.com/docs/api/#delete-checkout-key.
 --
@@ -166,14 +153,11 @@ deleteCheckoutKey :: ProjectPoint                         -- ^ Names of GitHub u
                   -> CircleCIResponse CheckoutKeyDeleted  -- ^ Status of checkout key deletion.
 deleteCheckoutKey project (Fingerprint aFingerprint) = do
     AccountAPIToken token <- ask
-    liftIO . runExceptT $ do
-        manager <- httpsManager
-        servantDeleteCheckoutKey (userName project)
-                                 (projectName project)
-                                 aFingerprint
-                                 (Just token)
-                                 manager
-                                 apiBaseUrl
+    liftClientM $ servantDeleteCheckoutKey
+        (userName project)
+        (projectName project)
+        aFingerprint
+        (Just token)
 
 -- | Checkout key fingerprint. For example, @"79:23:05:6a:6d:4c:3c:5c:0e:64:79:49:f0:e9:8d:a0"@.
 newtype Fingerprint = Fingerprint Text
@@ -286,31 +270,23 @@ type DeleteCheckoutKeyCall =
 servantGetCheckoutKeys :: UserName
                        -> ProjectName
                        -> Maybe Token
-                       -> Manager
-                       -> BaseUrl
                        -> ClientM [CheckoutKeyInfo]
 
 servantGetCheckoutKey :: UserName
                       -> ProjectName
                       -> Text
                       -> Maybe Token
-                      -> Manager
-                      -> BaseUrl
                       -> ClientM CheckoutKeyInfo
 
 servantCreateCheckoutKey :: UserName
                          -> ProjectName
                          -> Maybe Token
-                         -> Manager
-                         -> BaseUrl
                          -> ClientM CheckoutKeyInfo
 
 servantDeleteCheckoutKey :: UserName
                          -> ProjectName
                          -> Text
                          -> Maybe Token
-                         -> Manager
-                         -> BaseUrl
                          -> ClientM CheckoutKeyDeleted
 
 servantGetCheckoutKeys

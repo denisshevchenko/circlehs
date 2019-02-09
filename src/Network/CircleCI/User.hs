@@ -27,22 +27,18 @@ module Network.CircleCI.User (
     , module Network.CircleCI.Common.Run
 ) where
 
-import           Network.CircleCI.Common.URL
+import           Network.CircleCI.Common.Lift
 import           Network.CircleCI.Common.Types
-import           Network.CircleCI.Common.HTTPS
 import           Network.CircleCI.Common.Run
 
 import           Control.Monad                  ( mzero )
-import           Control.Monad.Except           ( runExceptT )
 import           Control.Monad.Reader           ( ask )
-import           Control.Monad.IO.Class         ( liftIO )
 import           Data.Aeson
 import           Data.Aeson.Types
 import           Data.HashMap.Strict
 import qualified Data.Proxy                     as P
 import           Data.Text                      ( Text )
 import           Data.Time.Clock                ( UTCTime )
-import           Network.HTTP.Client            ( Manager )
 
 import           Servant.API
 import           Servant.Client
@@ -67,11 +63,7 @@ import           Servant.Client
 getUserInfo :: CircleCIResponse UserInfo -- ^ Info about the signed in user.
 getUserInfo = do
     AccountAPIToken token <- ask
-    liftIO . runExceptT $ do
-        manager <- httpsManager
-        servantGetUserInfo (Just token)
-                           manager
-                           apiBaseUrl
+    liftClientM $ servantGetUserInfo (Just token)
 
 -- | User's analytics id. For example, @"6fc20e13-008e-4dc9-b158-ababd33a099d"@.
 type AnalyticsId = Text
@@ -202,8 +194,6 @@ type GetUserInfoCall =
 -------------------------------------------------------------------------------
 
 servantGetUserInfo :: Maybe Token
-                   -> Manager
-                   -> BaseUrl
                    -> ClientM UserInfo
 servantGetUserInfo = client userAPI
 

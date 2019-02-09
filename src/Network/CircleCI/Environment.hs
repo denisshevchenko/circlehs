@@ -29,20 +29,16 @@ module Network.CircleCI.Environment (
     , module Network.CircleCI.Common.Run
 ) where
 
-import           Network.CircleCI.Common.URL
+import           Network.CircleCI.Common.Lift
 import           Network.CircleCI.Common.Types
-import           Network.CircleCI.Common.HTTPS
 import           Network.CircleCI.Common.Run
 
 import           Control.Monad                  ( mzero )
-import           Control.Monad.Except           ( runExceptT )
 import           Control.Monad.Reader           ( ask )
-import           Control.Monad.IO.Class         ( liftIO )
 import           Data.Aeson
 import           Data.Aeson.Types
 import qualified Data.Proxy                     as P
 import           Data.Text                      ( Text )
-import           Network.HTTP.Client            ( Manager )
 
 import           Servant.API
 import           Servant.Client
@@ -71,13 +67,10 @@ getEnvVars :: ProjectPoint              -- ^ Names of GitHub user/project.
            -> CircleCIResponse [EnvVar] -- ^ List of environment variables.
 getEnvVars project = do
     AccountAPIToken token <- ask
-    liftIO . runExceptT $ do
-        manager <- httpsManager
-        servantGetEnvVars (userName project)
-                          (projectName project)
-                          (Just token)
-                          manager
-                          apiBaseUrl
+    liftClientM $ servantGetEnvVars
+        (userName project)
+        (projectName project)
+        (Just token)
 
 -- | Shows single environment variable. Based on https://circleci.com/docs/api/#get-environment-variable.
 --
@@ -103,14 +96,11 @@ getEnvVar :: ProjectPoint            -- ^ Names of GitHub user/project.
           -> CircleCIResponse EnvVar -- ^ Environment variable.
 getEnvVar project envVarName = do
     AccountAPIToken token <- ask
-    liftIO . runExceptT $ do
-        manager <- httpsManager
-        servantGetEnvVar (userName project)
-                         (projectName project)
-                         envVarName
-                         (Just token)
-                         manager
-                         apiBaseUrl
+    liftClientM $ servantGetEnvVar
+        (userName project)
+        (projectName project)
+        envVarName
+        (Just token)
 
 -- | Adds environment variable. Based on https://circleci.com/docs/api/#add-environment-variable.
 --
@@ -137,14 +127,11 @@ addEnvVar :: ProjectPoint            -- ^ Names of GitHub user/project.
           -> CircleCIResponse EnvVar -- ^ Added environment variable.
 addEnvVar project envVar = do
     AccountAPIToken token <- ask
-    liftIO . runExceptT $ do
-        manager <- httpsManager
-        servantAddEnvVar (userName project)
-                         (projectName project)
-                         (Just token)
-                         envVar
-                         manager
-                         apiBaseUrl
+    liftClientM $ servantAddEnvVar
+        (userName project)
+        (projectName project)
+        (Just token)
+        envVar
 
 -- | Deletes single environment variable. Based on https://circleci.com/docs/api/#delete-environment-variable.
 --
@@ -170,14 +157,11 @@ deleteEnvVar :: ProjectPoint                   -- ^ Names of GitHub user/project
              -> CircleCIResponse EnvVarDeleted -- ^ Info about environment variable deleting.
 deleteEnvVar project envVarName = do
     AccountAPIToken token <- ask
-    liftIO . runExceptT $ do
-        manager <- httpsManager
-        servantDeleteEnvVar (userName project)
-                            (projectName project)
-                            envVarName
-                            (Just token)
-                            manager
-                            apiBaseUrl
+    liftClientM $ servantDeleteEnvVar
+        (userName project)
+        (projectName project)
+        envVarName
+        (Just token)
 
 -- | Environment variable, name/value.
 data EnvVar = EnvVar {
@@ -277,32 +261,24 @@ type DeleteEnvVarCall =
 servantGetEnvVars :: UserName
                   -> ProjectName
                   -> Maybe Token
-                  -> Manager
-                  -> BaseUrl
                   -> ClientM [EnvVar]
 
 servantGetEnvVar :: UserName
                  -> ProjectName
                  -> EnvVarName
                  -> Maybe Token
-                 -> Manager
-                 -> BaseUrl
                  -> ClientM EnvVar
 
 servantAddEnvVar :: UserName
                  -> ProjectName
                  -> Maybe Token
                  -> EnvVar
-                 -> Manager
-                 -> BaseUrl
                  -> ClientM EnvVar
 
 servantDeleteEnvVar :: UserName
                     -> ProjectName
                     -> EnvVarName
                     -> Maybe Token
-                    -> Manager
-                    -> BaseUrl
                     -> ClientM EnvVarDeleted
 
 servantGetEnvVars
